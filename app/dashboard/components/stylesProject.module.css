@@ -1,0 +1,16 @@
+.proyectBlock {
+    display: flex;
+    margin: 0px 0px 34px 0px;
+    width: 30%;
+}
+
+.title {
+    font-size: 34px;
+    font-weight: 600;
+    margin: 0;
+}
+
+
+.proyectBlock:hover {
+        color: #707070;
+    }

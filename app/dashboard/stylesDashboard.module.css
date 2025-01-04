@@ -1,0 +1,28 @@
+.BottonCreateNew{
+    border-radius: 5px;
+    padding: 10px;
+    text-decoration: none;
+    color: #fdfcfc;
+    font-size: 40px;
+    background-color: #3b3b3b;
+  }
+
+.BottonCreateNew:hover {background-color:rgb(173, 173, 173);}
+
+.BottonBack{
+    border-radius: 5px;
+    padding: 10px;
+    text-decoration: none;
+    color: #fdfcfc;
+    background-color: #3b3b3b;
+
+  }
+
+  .BottonSpace{
+     margin-top: 20px; margin-bottom: 20px;
+  }
+  
+  .ProjectSpace{
+    font-size: 15px;
+
+  }

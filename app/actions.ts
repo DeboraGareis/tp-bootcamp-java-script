@@ -132,3 +132,37 @@ export const signOutAction = async () => {
   await supabase.auth.signOut();
   return redirect("/sign-in");
 };
+
+export const actionTextChange= async () => {
+  const supabase = await createClient();
+
+};
+
+/*
+export async function ActionLoadProject(id:number) {
+  if (id ==-1)
+              {
+            // El usuario hace clic en crear proyecto dentro de la estaña del dashboard
+            // Nuevo proyecto --> hago un insert en la BD
+            const { error } = await supabase
+            .from('project')
+            .insert({name:`nombre-proyecto-${id}`,content: " "});
+              }
+          //El usuario elige un proyecto existente
+          // Traigo la info existente en la bd del proyecto
+          else{
+              const { data, error } = await supabase
+              .from('project')
+              .select(`id,name,content`).eq(`id`, id).single();
+              //uso los setters de useState para cambiar los valores de los estados
+              console.log("nombre", data?.name, "\n","contenido", data?.content);
+              setNameValue( data?.name );
+              setTextValue( data?.content );
+              }  
+}
+
+
+
+
+
+*/
