@@ -23,10 +23,10 @@ export default async function dashboard() {
     return (
         <div> 
             <div className={styles.BottonSpace}>
-                <a href="//dashboard/-1" className={styles.BottonCreateNew} >Nuevo</a>
+                <a href="/dashboard/-1" className={styles.BottonCreateNew} >Nuevo</a>
             </div>
             
-            <div className={styles.ProjectSpace}>
+            <div >
                 {data?.map(proy => <Project key={`project-id-${proy.id}`} {...proy} />)}
             </div>
             

@@ -19,8 +19,11 @@ export default function Project (params: ParamsProject) :ReactNode{
     <>
     <div className={styles.proyectBlock}>
      <Link href={`/dashboard/${params.id}`} className={styles.title}>{params.name}</Link>
+
     </div>
     </>
     )
     
 }
+
+

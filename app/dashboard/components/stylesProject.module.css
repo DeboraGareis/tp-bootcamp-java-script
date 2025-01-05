@@ -1,11 +1,11 @@
 .proyectBlock {
     display: flex;
     margin: 0px 0px 34px 0px;
-    width: 30%;
+    width: 90%;
 }
 
 .title {
-    font-size: 34px;
+    font-size: 18px;
     font-weight: 600;
     margin: 0;
 }
