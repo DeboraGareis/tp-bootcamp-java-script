@@ -13,6 +13,7 @@ Encontrarse en la carpeta del proyecto:
 cd tp-bootcamp-java-script
 
 instalar las dependencias que el proyecto necesita con:
+
 npm install 
 
 luego ejecutar con: 
