@@ -20,10 +20,7 @@ export default function ContentProject() {
   const [TextValue, setTextValue] = useState("");
   //Estado para controlar el nombre del proyecto
   const [NameValue, setNameValue] = useState("");
-  //Estado para controlar el acceso: privado (true, por defecto) o publico (false)
-  const [PrivateAccess, setPrivateAccess] = useState(true);
 
- ;
   const loadProject = async () => {
     
     //Obtengo el usuario actual 
@@ -50,7 +47,7 @@ export default function ContentProject() {
         router.replace(`/dashboard/${data.id}`);// Actualizar la URL con el nuevo id
         setNameValue(data.name);
         setTextValue(data.content);
-        setPrivateAccess(data.access);
+        //setPrivateAccess(data.access);
 
         //hago un insert en tabla de editores con id del autor
         const { data:editor, error:errorEditor } = await supabase
@@ -61,7 +58,7 @@ export default function ContentProject() {
         }
       }
       else {
-        // Caso en el que el usuario elige un proyecto existente
+        // Caso en el que el usuario elige un proyecto existente, obtener el proyecto de la bd
         const { data, error } = await supabase
           .from("project")
           .select()
@@ -73,7 +70,7 @@ export default function ContentProject() {
           }
         setNameValue(data.name);
         setTextValue(data.content);
-        setPrivateAccess(data.access);
+        //setPrivateAccess(data.access);
       }
     } catch (error) {
       console.error("Error al cargar el proyecto");
@@ -84,7 +81,8 @@ export default function ContentProject() {
     loadProject();
   }, []);
 
-useEffect(() => {
+  //crear canal para realtime para ver en tiempo real los cambios
+  useEffect(() => {
     const subscriber = supabase.channel('project')
       .on('postgres_changes', {
         event: 'UPDATE',
@@ -101,34 +99,26 @@ useEffect(() => {
     }
   }, [TextValue]);
 
-  // Funcion del checkbox que maneja el cambio del estado publico/privado
-  async function ChangeAccess(event: ChangeEvent<HTMLInputElement>) {
-      setPrivateAccess(!PrivateAccess);
-      await supabase
-      .from("project")
-      .update({ access:!PrivateAccess})
-      .eq("id", id);
-  }
-
   return (
     <div>
+      {/*Div para el input del nombre del archivo*/}
       <div className={styles.container}>
         <input
-          type="text"
-          name="NameValue"
-          className={styles.NameBlock}
-          value={NameValue}
-          onChange={async (e) => {
-            const newName=e.target.value;
-            setNameValue(newName);
-            await supabase
-            .from("project")
-            .update({ name: newName })
-            .eq("id", id);      
+            type="text"
+            name="NameValue"
+            className={styles.NameBlock}
+            value={NameValue}
+            onChange= {async (e) => {
+              const newName=e.target.value;
+              setNameValue(newName);
+              await supabase
+              .from("project")
+              .update({ name: newName })
+              .eq("id", id);      
             }}
           />
       </div>
-
+      {/*Div para el input del contenido del archivo*/}
       <div className={styles.container}>
         <textarea
           name="textValue"
@@ -146,12 +136,7 @@ useEffect(() => {
           }}
         ></textarea>
       </div>
-
-      <div className={styles.Check }>
-      <input type="checkbox" name="access" checked={!PrivateAccess} onChange={ChangeAccess}/>
-      Acceso publico 
-      </div>    
-        <br/><br/><a className={styles2.BottonBack} href="/dashboard">Volver</a>
+        <br/><a className={styles2.BottonBack} href="/dashboard">Volver</a>
     </div>
   );
 }

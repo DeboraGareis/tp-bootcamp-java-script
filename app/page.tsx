@@ -1,8 +1,4 @@
-
-//import styles from "./pagePpal.module.css"
-
 import { createClient } from "@/utils/supabase/server";
-
 
 export default async function Home() {
 

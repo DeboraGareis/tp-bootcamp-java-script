@@ -22,26 +22,28 @@ export default async function dashboard() {
     `);
     if (error) {
         throw new Error(error.message);
-    }
-    console.log("proyectos:", data.map(proj =>proj.id));
-    
+    } 
     
     //Obtengo todos los proyectos en los que el usuario aparece como editor       
     const { data:ProjUser , error:errorProjUser } = await supabase.from("editor")
     .select(`id_project`).eq("id_editor" , authUser.user.id);
-    //guardo en un arreglo los id de dichos projectos
-    const ProjEditorIds = ProjUser?.map(proj=> proj.id_project);
     if (errorProjUser) {
         throw new Error(errorProjUser.message);
     }
-
+    
+    //guardo en un arreglo los id de dichos projectos
+    const ProjEditorIds = ProjUser?.map(proj=> proj.id_project);
+    
     return (
-        <div>      
+        <div>
+            {/*Boton para crear un proyecto nuevo*/}      
             <div className = {styles.BottonSpace}>
                 <a href="/dashboard/-1" className = {styles.BottonCreateNew} key={`project-id-${authUser.user?.id}`}>Nuevo</a>
             </div>
             {
-            //Organizo los proyectos en secciones segun el tipo de editor que es el usuario    
+            //Organizo los proyectos en secciones segun el tipo de editor que es el usuario
+            //El componente "Project" se encargara de mostrar el proyecto, al cual le paso 
+            //el proyecto como prop    
             data?.map((proj) =>
                 proj.id_autor === authUser.user?.id ? (
                 <>

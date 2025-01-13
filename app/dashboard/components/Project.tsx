@@ -2,10 +2,9 @@
 
 import { createClient } from "@/utils/supabase/client";
 import Link from "next/link";
-import { ReactNode, useEffect, useState } from "react";
+import { ChangeEvent, ReactNode, useEffect, useState } from "react";
 import styles from "./stylesProject.module.css";
 import { User } from "@supabase/supabase-js";
-
 
 type ParamsProject = {
     id: string;
@@ -17,19 +16,14 @@ type ParamsProject = {
 
 const supabase = createClient();
 
-async function DeleteProject(id: string) {
-    const response = await supabase
-        .from('project')
-        .delete()
-        .eq('id', id)
-    location.reload()
-    }
 export default function Project (params: ParamsProject) :ReactNode{
     const [IdAuthUser, setIdAuthUser] = useState<string|undefined>();
     const [users, setUsers] = useState<User[] | null>();
     const [editUsers, setEditUsers] = useState<{}[]| null>();
+    //Estado para controlar el acceso: privado (true, por defecto) o publico (false)
+    const [PrivateAccess, setPrivateAccess] = useState(params.access);
 
-    useEffect(() =>{
+    useEffect(() => {
     const getAutor =async () => {
         
       //Obtengo el usuario actual
@@ -47,9 +41,9 @@ export default function Project (params: ParamsProject) :ReactNode{
         setUsers(users);
         }
 
-        // obtengo los id de los editores para elegir nuevos editores o mostrar los que pueden editar
+        // obtengo los id de los editores para elegir nuevos editores o mostrar a los que pueden editar
         const fetchEditorsId = async () => {
-        const { data, error } = await supabase.from("editor").select("id_editor");
+        const { data, error } = await supabase.from("editor").select("id_editor").eq("id_project", params.id);;
             const editorIds = data?.map(editor => editor.id_editor);
             setEditUsers(editorIds);
             if (error) {
@@ -60,6 +54,13 @@ export default function Project (params: ParamsProject) :ReactNode{
         fetchEditorsId();
     } ,[])
 
+    async function DeleteProject(id: string) {
+      const response = await supabase
+          .from('project')
+          .delete()
+          .eq('id', id)
+      location.reload()
+      }
     //funcion que permite agregar un nuevo editor, respodiendo al evento de click de usuario autor en "Permitir Acceso"
     async function GiveAccess(id: string): Promise<void> {
         const { data, error } = await supabase
@@ -70,8 +71,17 @@ export default function Project (params: ParamsProject) :ReactNode{
         if (error) {
             throw new Error(error.message);
             }
+        location.reload()
     }
+    // Funcion del checkbox que maneja el cambio del estado publico/privado
+  async function ChangeAccess(event: ChangeEvent<HTMLInputElement>) {
+    setPrivateAccess(!PrivateAccess);
+    await supabase
+    .from("project")
+    .update({ access:!PrivateAccess})
+    .eq("id", params.id);
     
+}
     return (
       <>
         {/* Para colocar un enlace para cada proyecto con su respectivo ID */}
@@ -86,9 +96,15 @@ export default function Project (params: ParamsProject) :ReactNode{
               <button onClick={() => DeleteProject(params.id)} className="ml-4 hover:border-gray-500 text-sm">
                 Eliminar
               </button>
+              
+              {/*Div para el archivo y dar acceso publico*/}
+              <div className="flex  justify-center items-center gap-3 mx-3 px-2 py-1">
+              <input type="checkbox" name="access" checked={!PrivateAccess} onChange={ChangeAccess}/>
+              Acceso publico 
+              </div>  
+              
               <div className="flex  justify-center items-center border border-gray-300 border-opacity-25 gap-5 mx-3 px-2 py-1">
                 <p className="flex gap-5 items-center font-bold mb-10">Editores: </p>
-      
                 {users?.map(user => {
                   if (!editUsers?.includes(user.id)) {
                     // Mostrar botón "Permitir acceso"
