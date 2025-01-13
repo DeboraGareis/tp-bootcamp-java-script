@@ -7,6 +7,8 @@
     border-color:rgb(124, 122, 122) ;
     border-width: 2px;
     field-sizing: content;
+    min-width: 200px;
+    min-height: 100px;
 
 }
 .NameBlock{
@@ -16,3 +18,10 @@
 
 }
 
+.Check {
+    
+    display: inline-flex;
+    justify-content: center;
+    align-items:center;
+    
+  }

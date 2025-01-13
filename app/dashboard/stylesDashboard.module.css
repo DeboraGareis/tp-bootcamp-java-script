@@ -23,7 +23,9 @@
      margin-top: 20px; margin-bottom: 20px;
   }
   
-  .ProjectSpace{
-    font-size: 15px;
-
+  .SectionType{
+    font-size: 10px;
+    background-color: #3b3b3b;
+    width: 40px;
+    text-align: center;
   }

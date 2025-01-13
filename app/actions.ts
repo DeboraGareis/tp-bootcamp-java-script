@@ -15,17 +15,29 @@ export const signUpAction = async (formData: FormData) => {
     return encodedRedirect(
       "error",
       "/sign-up",
-      "Email and password are required",
+      "Se requiere mail y contraseña",
     );
   }
-
-  const { error } = await supabase.auth.signUp({
+//guardar en auth.users
+  const { error,data:user } = await supabase.auth.signUp({
     email,
     password,
     options: {
       emailRedirectTo: `${origin}/auth/callback`,
     },
   });
+
+  //guardar en public.users
+   const { error: errorSavingUser,data } = await supabase.from("users").insert({
+    id: user.user?.id,
+    email:user.user?.email
+  });
+
+  if (errorSavingUser) {
+    console.error(errorSavingUser)
+    // localhost:3000/sign-up?error=errorSavingUser.message
+    return encodedRedirect("error", "/sign-up", errorSavingUser.message);
+  }
 
   if (error) {
     console.error(error.code + " " + error.message);
@@ -34,7 +46,7 @@ export const signUpAction = async (formData: FormData) => {
     return encodedRedirect(
       "success",
       "/sign-up",
-      "Thanks for signing up! Please check your email for a verification link.",
+      "Gracias por registrarse! Ya puede iniciar sesion para poder ver proyectos publicos, crear o gestionar los suyos ",
     );
   }
 };
@@ -53,7 +65,7 @@ export const signInAction = async (formData: FormData) => {
     return encodedRedirect("error", "/sign-in", error.message);
   }
 
-  return redirect("/protected");
+  return redirect("/dashboard");
 };
 
 export const forgotPasswordAction = async (formData: FormData) => {
@@ -138,31 +150,7 @@ export const actionTextChange= async () => {
 
 };
 
-/*
-export async function ActionLoadProject(id:number) {
-  if (id ==-1)
-              {
-            // El usuario hace clic en crear proyecto dentro de la estaña del dashboard
-            // Nuevo proyecto --> hago un insert en la BD
-            const { error } = await supabase
-            .from('project')
-            .insert({name:`nombre-proyecto-${id}`,content: " "});
-              }
-          //El usuario elige un proyecto existente
-          // Traigo la info existente en la bd del proyecto
-          else{
-              const { data, error } = await supabase
-              .from('project')
-              .select(`id,name,content`).eq(`id`, id).single();
-              //uso los setters de useState para cambiar los valores de los estados
-              console.log("nombre", data?.name, "\n","contenido", data?.content);
-              setNameValue( data?.name );
-              setTextValue( data?.content );
-              }  
-}
 
 
 
 
-
-*/
